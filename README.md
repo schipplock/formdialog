@@ -1,8 +1,7 @@
 # FormDialog
 
 **FormDialog** ist eine Java Bibliothek, mit der ich in einer Swing-Anwendung ohne viel Aufwand ein Formular
-erstelle. Die Validierung der Werte in den Textfeldern wird unterstützt. Invalide Einträge werden in roter Farbe
-dargestellt. Invalide Werte verhindern das Betätigen des `confirmButton` (das kann "speichern", "ok", alles sein).
+erstelle. Die Validierung der Werte in den Textfeldern wird unterstützt.
 Diese Bibliothek wurde mit Java 17 getestet.
 
 ## Screenshots
