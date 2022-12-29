@@ -61,6 +61,8 @@ public class FormDialog extends JDialog {
 
     private boolean autosize = false;
 
+    private boolean center = false;
+
     public FormDialog(Frame owner, boolean modal) {
         super(owner, "", modal);
 
@@ -239,13 +241,7 @@ public class FormDialog extends JDialog {
     }
 
     public FormDialog center() {
-        SwingUtilities.invokeLater(() -> {
-            GraphicsDevice screen = MouseInfo.getPointerInfo().getDevice();
-            Rectangle r = screen.getDefaultConfiguration().getBounds();
-            int x = (r.width - this.getWidth()) / 2 + r.x;
-            int y = (r.height - this.getHeight()) / 2 + r.y;
-            setLocation(x, y);
-        });
+        center = true;
         return this;
     }
 
@@ -259,6 +255,7 @@ public class FormDialog extends JDialog {
         if (b) {
             handleActionButtons();
             handleAutoSizing();
+            handleCenter();
         }
         super.setVisible(b);
     }
@@ -306,6 +303,14 @@ public class FormDialog extends JDialog {
         int width = itemPanel.getWidth() + 40;
         setPreferredSize(new Dimension(width, height));
         pack();
+    }
+
+    private void handleCenter() {
+        GraphicsDevice screen = MouseInfo.getPointerInfo().getDevice();
+        Rectangle r = screen.getDefaultConfiguration().getBounds();
+        int x = (r.width - this.getWidth()) / 2 + r.x;
+        int y = (r.height - this.getHeight()) / 2 + r.y;
+        setLocation(x, y);
     }
 
     private String localize(String key) {
