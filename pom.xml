@@ -17,7 +17,7 @@ limitations under the License.
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.schipplock.gui.swing.dialogs</groupId>
     <artifactId>formdialog</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
     <name>FormDialog</name>
     <description>FormDialog for use in Swing applications</description>
     <url>https://github.com/schipplock/formdialog</url>
