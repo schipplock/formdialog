@@ -95,7 +95,7 @@ public class FormDialog extends JDialog {
     }
 
     public FormDialog title(String title) {
-        this.setTitle(title);
+        setTitle(title);
         return this;
     }
 
