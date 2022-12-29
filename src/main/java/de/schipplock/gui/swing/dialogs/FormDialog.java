@@ -197,12 +197,15 @@ public class FormDialog extends JDialog {
         return textfield(name, caption, initialValue, tooltip, widthInPixel, value -> true);
     }
 
-    public FormDialog combobox(String name, String caption, int widthInPixel, String selectedValue, String[] items) {
+    public FormDialog combobox(String name, String caption, int widthInPixel, String selectedValue, String[] items, ValueSupplier valueSupplier) {
         values.put(name, selectedValue);
 
         JComboBox<String> comboBox = new JComboBox<>(items);
         comboBox.setSelectedItem(selectedValue);
-        comboBox.addActionListener(e -> values.put(name, comboBox.getItemAt(comboBox.getSelectedIndex())));
+        comboBox.addActionListener(e -> {
+            values.put(name, comboBox.getItemAt(comboBox.getSelectedIndex()));
+            valueSupplier.supply(values);
+        });
 
         if (groupPanel != null) {
             groupPanel.add(new JLabel(caption), "right, pushx");
@@ -212,6 +215,11 @@ public class FormDialog extends JDialog {
             itemPanel.add(comboBox, format("w %d, wrap", widthInPixel));
         }
 
+        return this;
+    }
+
+    public FormDialog combobox(String name, String caption, int widthInPixel, String selectedValue, String[] items) {
+        combobox(name, caption, widthInPixel, selectedValue, items, (values) -> {});
         return this;
     }
 
