@@ -66,6 +66,7 @@ public class FormDialogDemo extends JFrame {
                     }
                 })
                 .textfield("NOVERIFY", "Ohne Validierung", "egal", "tooltip", 150)
+                .datepanel("DATE1", "<html><b>Datum:</b></html>", 150)
                 .endGroup()
                 .beginGroup("Nur ein paar Labels")
                 .label("LABEL1", "<html><b>Alter Zählerstand:</b></html>", "123455", "tooltip", 150)
@@ -73,6 +74,8 @@ public class FormDialogDemo extends JFrame {
                 .endGroup()
                 .label("LABEL3", "<html><b>Label ohne Gruppe:</b></html>", "jup, das geht auch", "tooltip", 150)
                 .label("LABEL4", "<html><b>Label ohne Gruppe:</b></html>", "noch eins", "tooltip", 150)
+                .datepanel("DATE2", "<html><b>Datum:</b></html>", 150)
+                .timepanel("TIME1", "<html><b>Uhrzeit:</b></html>", 150)
                 .onConfirm((values) -> {
                     values.forEach((componentName, value) -> {
                         System.out.printf("component %s has value %s%n", componentName, value);

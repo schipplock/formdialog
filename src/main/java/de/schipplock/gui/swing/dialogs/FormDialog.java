@@ -22,6 +22,11 @@ import de.schipplock.gui.swing.dialogs.supplier.ValueSupplier;
 import de.schipplock.gui.swing.dialogs.verifier.Verifier;
 import de.schipplock.gui.swing.svgicon.SvgIconManager;
 import de.schipplock.gui.swing.svgicon.SvgIcons;
+
+import de.schipplock.gui.swing.datetimepanel.DateTimePanel;
+import de.schipplock.gui.swing.datetimepanel.DatePanel;
+import de.schipplock.gui.swing.datetimepanel.TimePanel;
+
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -31,6 +36,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static java.lang.String.format;
@@ -54,6 +60,12 @@ public class FormDialog extends JDialog {
     private final Map<String, String> values = new HashMap<>();
 
     private final Set<JTextField> invalidTextFields = new HashSet<>();
+
+    private final Set<DateTimePanel> invalidDateTimePanels = new HashSet<>();
+
+    private final Set<DatePanel> invalidDatePanels = new HashSet<>();
+
+    private final Set<TimePanel> invalidTimePanels = new HashSet<>();
 
     private final Map<String, JButton> actionButtons = new HashMap<>();
 
@@ -209,10 +221,10 @@ public class FormDialog extends JDialog {
 
         if (groupPanel != null) {
             groupPanel.add(new JLabel(caption), "right, pushx");
-            groupPanel.add(comboBox, format("w %d, wrap", widthInPixel));
+            groupPanel.add(comboBox, format("w %dpx, wrap", widthInPixel));
         } else {
             itemPanel.add(new JLabel(caption), "right, pushx");
-            itemPanel.add(comboBox, format("w %d, wrap", widthInPixel));
+            itemPanel.add(comboBox, format("w %dpx, wrap", widthInPixel));
         }
 
         return this;
@@ -221,6 +233,93 @@ public class FormDialog extends JDialog {
     public FormDialog combobox(String name, String caption, int widthInPixel, String selectedValue, String[] items) {
         combobox(name, caption, widthInPixel, selectedValue, items, (values) -> {});
         return this;
+    }
+
+    public FormDialog datetimepanel(String name, String caption, int widthInPixel, LocalDateTime localDateTime) {
+        var dateTimePanel = new DateTimePanel(localDateTime);
+        values.put(name, dateTimePanel.getLocalDateTime().toString());
+
+        dateTimePanel.onChange(() -> {
+            values.put(name, dateTimePanel.getLocalDateTime().toString());
+            if (!dateTimePanel.isValidDateTime()) {
+                invalidDateTimePanels.add(dateTimePanel);
+            } else {
+                invalidDateTimePanels.remove(dateTimePanel);
+            }
+            updateConfirmButtonState();
+        });
+
+        if (groupPanel != null) {
+            groupPanel.add(new JLabel(caption), "aligny top, right, pushx");
+            groupPanel.add(dateTimePanel, format("w %dpx, wrap", widthInPixel));
+        } else {
+            itemPanel.add(new JLabel(caption), "aligny top, right, pushx");
+            itemPanel.add(dateTimePanel, format("w %dpx, wrap", widthInPixel));
+        }
+
+        return this;
+    }
+
+    public FormDialog datetimepanel(String name, String caption, int widthInPixel) {
+        return datetimepanel(name, caption, widthInPixel, LocalDateTime.now());
+    }
+
+    public FormDialog datepanel(String name, String caption, int widthInPixel, LocalDateTime localDateTime) {
+        var datePanel = new DatePanel(localDateTime.toLocalDate());
+        values.put(name, datePanel.getLocalDate().toString());
+
+        datePanel.onChange(() -> {
+            values.put(name, datePanel.getLocalDate().toString());
+            if (!datePanel.isValidDate()) {
+                invalidDatePanels.add(datePanel);
+            } else {
+                invalidDatePanels.remove(datePanel);
+            }
+            updateConfirmButtonState();
+        });
+
+        if (groupPanel != null) {
+            groupPanel.add(new JLabel(caption), "aligny top, right, pushx");
+            groupPanel.add(datePanel, format("w %dpx, wrap", widthInPixel));
+        } else {
+            itemPanel.add(new JLabel(caption), "aligny top, right, pushx");
+            itemPanel.add(datePanel, format("w %dpx, wrap", widthInPixel));
+        }
+
+        return this;
+    }
+
+    public FormDialog datepanel(String name, String caption, int widthInPixel) {
+        return datepanel(name, caption, widthInPixel, LocalDateTime.now());
+    }
+
+    public FormDialog timepanel(String name, String caption, int widthInPixel, LocalDateTime localDateTime) {
+        var timePanel = new TimePanel(localDateTime.toLocalTime());
+        values.put(name, timePanel.getLocalTime().toString());
+
+        timePanel.onChange(() -> {
+            values.put(name, timePanel.getLocalTime().toString());
+            if (!timePanel.isValidTime()) {
+                invalidTimePanels.add(timePanel);
+            } else {
+                invalidTimePanels.remove(timePanel);
+            }
+            updateConfirmButtonState();
+        });
+
+        if (groupPanel != null) {
+            groupPanel.add(new JLabel(caption), "aligny top, right, pushx");
+            groupPanel.add(timePanel, format("gap 0 0 0 0, w %dpx, wrap", widthInPixel));
+        } else {
+            itemPanel.add(new JLabel(caption), "aligny top, right, pushx");
+            itemPanel.add(timePanel, format("gap 0 0 0 0, w %dpx, wrap", widthInPixel));
+        }
+
+        return this;
+    }
+
+    public FormDialog timepanel(String name, String caption, int widthInPixel) {
+        return timepanel(name, caption, widthInPixel, LocalDateTime.now());
     }
 
     public FormDialog onConfirm(ValueSupplier valueSupplier) {
@@ -282,7 +381,7 @@ public class FormDialog extends JDialog {
     }
 
     private void updateConfirmButtonState() {
-        confirmButton.setEnabled(invalidTextFields.isEmpty());
+        confirmButton.setEnabled(invalidTextFields.isEmpty() && invalidDateTimePanels.isEmpty() && invalidDatePanels.isEmpty() && invalidTimePanels.isEmpty());
     }
 
     private void handleActionButtons() {

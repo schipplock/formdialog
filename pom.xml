@@ -17,7 +17,7 @@ limitations under the License.
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.schipplock.gui.swing.dialogs</groupId>
     <artifactId>formdialog</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
     <name>FormDialog</name>
     <description>FormDialog for use in Swing applications</description>
     <url>https://github.com/schipplock/formdialog</url>
@@ -138,6 +138,11 @@ limitations under the License.
             <groupId>de.schipplock.gui.swing</groupId>
             <artifactId>ahreflabel</artifactId>
             <version>0.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>de.schipplock.gui.swing</groupId>
+            <artifactId>datetimepanel</artifactId>
+            <version>0.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
